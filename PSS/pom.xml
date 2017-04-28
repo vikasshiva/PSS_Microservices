@@ -10,10 +10,10 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>chapter4.book</module>
-    <module>chapter4.checkin</module>
-    <module>chapter4.fares</module>
-    <module>chapter4.search</module>
-    <module>chapter4.website</module>
+    <module>book</module>
+    <module>checkin</module>
+    <module>fares</module>
+    <module>search</module>
+    <module>website</module>
   </modules>
 </project>
