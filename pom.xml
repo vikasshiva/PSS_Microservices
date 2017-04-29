@@ -15,5 +15,6 @@
     <module>fares</module>
     <module>search</module>
     <module>website</module>
+    <module>configserver</module>
   </modules>
 </project>

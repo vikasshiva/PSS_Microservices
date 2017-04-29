@@ -8,8 +8,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import com.brownfield.pss.book.entity.BookingRecord;
@@ -21,13 +21,16 @@ import com.brownfield.pss.book.repository.InventoryRepository;
 @Component
 public class BookingComponent {
 	private static final Logger logger = LoggerFactory.getLogger(BookingComponent.class);
-	private static final String FareURL = "http://localhost:8080/fares";
+	//private static final String FareURL = "http://localhost:8080/fares";
 	
 	BookingRepository bookingRepository;
 	InventoryRepository inventoryRepository;
 	
 	//@Autowired
 	private RestTemplate restTemplate;
+	
+	@Value("${fares-service.url}")
+	private String fareURL;
 	
 	Sender sender;
 
@@ -42,7 +45,7 @@ public class BookingComponent {
 	public long book(BookingRecord record) {
 		logger.info("calling fares to get fare");
 		//call fares to get fare
-		Fare fare = restTemplate.getForObject(FareURL +"/get?flightNumber="+record.getFlightNumber()+"&flightDate="+record.getFlightDate(),Fare.class);
+		Fare fare = restTemplate.getForObject(fareURL +"/get?flightNumber="+record.getFlightNumber()+"&flightDate="+record.getFlightDate(),Fare.class);
 		logger.info("calling fares to get fare "+ fare);
 		//check fare
 		if (!record.getFare().equals(fare.getFare()))
