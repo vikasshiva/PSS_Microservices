@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.brownfield.pss.book.component.Fare;
 
-@FeignClient(name="fares-proxy")
-@RibbonClient(name="fares")
+@FeignClient(name="fares-service")
 public interface FareServiceProxy {
 	
 	@RequestMapping(value="/fares/get",method=RequestMethod.GET)

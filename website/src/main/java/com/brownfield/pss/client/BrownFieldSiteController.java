@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,11 +23,15 @@ import org.springframework.web.client.RestTemplate;
 public class BrownFieldSiteController {
 	private static final Logger logger = LoggerFactory.getLogger(BrownFieldSiteController.class);
 
-  	RestTemplate searchClient = new RestTemplate();
+	
+	@Autowired
+	RestTemplate searchClient;
 
-  	RestTemplate bookingClient = new RestTemplate();
+	@Autowired
+	RestTemplate bookingClient;
 
-  	RestTemplate checkInClient = new RestTemplate();
+	@Autowired
+  	RestTemplate checkInClient;
   	
   	@Value("${search-service.url}")
   	private String searchUrl;
@@ -139,4 +146,14 @@ public class BrownFieldSiteController {
 	   		model.addAttribute("message","Checked In, Seat Number is 28c , checkin id is "+ checkinId);
 	       return "checkinconfirm"; 
 	}	
+}
+
+@Configuration
+class RestTemplateConfiguration{
+	
+	@LoadBalanced
+	@Bean
+	RestTemplate restTemplate(){
+		return new RestTemplate();
+	}
 }
