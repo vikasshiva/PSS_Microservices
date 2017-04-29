@@ -8,13 +8,13 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import com.brownfield.pss.book.entity.BookingRecord;
 import com.brownfield.pss.book.entity.Inventory;
 import com.brownfield.pss.book.entity.Passenger;
+import com.brownfield.pss.book.proxy.FareServiceProxy;
 import com.brownfield.pss.book.repository.BookingRepository;
 import com.brownfield.pss.book.repository.InventoryRepository;
 
@@ -26,26 +26,26 @@ public class BookingComponent {
 	BookingRepository bookingRepository;
 	InventoryRepository inventoryRepository;
 	
-	//@Autowired
-	private RestTemplate restTemplate;
-	
-	@Value("${fares-service.url}")
-	private String fareURL;
 	
 	Sender sender;
+	
+	@Autowired
+	private FareServiceProxy fareServiceProxy;
 
 	@Autowired
 	public BookingComponent (BookingRepository bookingRepository,
 					  Sender sender,InventoryRepository inventoryRepository){
 		this.bookingRepository = bookingRepository;
-		this.restTemplate = new RestTemplate();
 		this.sender = sender;
 		this.inventoryRepository = inventoryRepository;
 	}
 	public long book(BookingRecord record) {
 		logger.info("calling fares to get fare");
 		//call fares to get fare
-		Fare fare = restTemplate.getForObject(fareURL +"/get?flightNumber="+record.getFlightNumber()+"&flightDate="+record.getFlightDate(),Fare.class);
+		//Fare fare = restTemplate.getForObject(fareServiceProxy +"/get?flightNumber="+record.getFlightNumber()+"&flightDate="+record.getFlightDate(),Fare.class);
+		
+		Fare fare = fareServiceProxy.getFare(record.getFlightNumber(), record.getFlightDate());
+				
 		logger.info("calling fares to get fare "+ fare);
 		//check fare
 		if (!record.getFare().equals(fare.getFare()))
