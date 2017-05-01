@@ -17,5 +17,6 @@
     <module>website</module>
     <module>configserver</module>
     <module>eurekaserver</module>
+    <module>search-apigateway</module>
   </modules>
 </project>
