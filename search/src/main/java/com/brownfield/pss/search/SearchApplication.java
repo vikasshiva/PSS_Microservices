@@ -12,10 +12,9 @@ public class SearchApplication /*implements CommandLineRunner*/{
 		SpringApplication.run(SearchApplication.class, args);
 	}
 	
-
 	/*@Autowired
 	private FlightRepository flightRepository;
-	
+
 	@Override
 	public void run(String... strings) throws Exception {
 		List<Flight> flights = new ArrayList<>();
@@ -28,7 +27,6 @@ public class SearchApplication /*implements CommandLineRunner*/{
 		flights.add(new Flight("BF104", "LAX","SFO","22-JAN-16",new Fares("104", "USD"),new Inventory(100)));
 	    
 		flightRepository.save(flights);
-		
 	}*/
 	
 }
