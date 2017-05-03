@@ -3,6 +3,10 @@ package com.brownfield.pss.search.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -21,7 +25,10 @@ import com.brownfield.pss.search.entity.Flight;
 @RefreshScope
 class SearchRestController {
 	
+	private static final Logger logger=LoggerFactory.getLogger(SearchRestController.class);
+	
 	private SearchComponent searchComponent;
+	
 	
 	@Value("${orginairports.shutdown}")
 	private String originAirportShutdownList;
@@ -34,12 +41,25 @@ class SearchRestController {
 	
 	@RequestMapping(value="/get", method = RequestMethod.POST)
 	List<Flight> search(@RequestBody SearchQuery query){
-		System.out.println("Input : "+ query);
+		logger.info("Input : "+ query);
 		if(Arrays.asList(originAirportShutdownList.split(",")).contains(query.getOrigin())){
-			System.out.println("Given Origin is sutdown");
+			logger.debug("Given Origin is sutdown");
 			return null;
 		}
-		return searchComponent.search(query);
+		
+		List<Flight> flights = searchComponent.search(query);
+		
+		for(Flight flight : flights){
+			logger.info("Flight Info :::::::::::"+flight.getDestination()+":"+flight.getFlightDate()+":"+flight.getFlightNumber()+":"+flight.getOrigin());
+		}
+
+		return flights;
+	}
+	
+	@RequestMapping("/hub")
+	String getHub(HttpServletRequest req){
+		logger.info("Searchfor Hub,Received from search-apigateway ");
+		return "SFO";
 	}
  
 }
